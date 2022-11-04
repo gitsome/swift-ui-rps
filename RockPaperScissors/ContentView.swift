@@ -7,30 +7,15 @@
 
 import SwiftUI
 
-enum GAME_OPTIONS: CaseIterable {
-    case rock
-    case paper
-    case scissors
-    
-    var description : String {
-        switch self {
-        case .rock: return "🪨"
-        case .paper: return "🗒️"
-        case .scissors: return "✂️"
-        }
-    }
+enum GAME_OPTIONS: String, CaseIterable {
+    case rock = "🪨"
+    case paper = "🗒️"
+    case scissors = "✂️"
 }
 
-enum GAME_STRATEGY: CaseIterable {
-    case win
-    case lose
-    
-    var description : String {
-        switch self {
-        case .win: return "Win"
-        case .lose: return "Lose"
-        }
-    }
+enum GAME_STRATEGY: String, CaseIterable {
+    case win = "Win"
+    case lose = "Lose"
 }
 
 let GAME_OPTION_MAP = [
@@ -51,12 +36,14 @@ let GAME_OPTION_MAP = [
 
 struct GameButton: View {
     
-    var text = ""
-    var action: () -> Void
+    var gameOption: GAME_OPTIONS
+    var action: (GAME_OPTIONS) -> Void
     
     var body: some View {
         
-        Button(text, action: action)
+        Button(gameOption.rawValue) {
+            action(gameOption)
+        }
         .padding(10)
         .font(.system(size: 36))
         .background(.thickMaterial)
@@ -93,10 +80,10 @@ struct ContentView: View {
                 Spacer()
                 
                 VStack {
-                    Text(currentStrategy.description)
+                    Text(currentStrategy.rawValue)
                         .font(.system(size: 64))
                     
-                    Text(currentOpponent.description)
+                    Text(currentOpponent.rawValue)
                 }
                 .padding(15)
                 .font(.system(size: 64))
@@ -108,17 +95,13 @@ struct ContentView: View {
                 HStack {
                     Spacer()
                     Spacer()
-                    GameButton(text: "🪨") {
-                        onSelectionMade(GAME_OPTIONS.rock)
-                    }
+                    
+                    GameButton(gameOption: GAME_OPTIONS.rock, action: onSelectionMade)
                     Spacer()
-                    GameButton(text: "🗒️") {
-                        onSelectionMade(GAME_OPTIONS.paper)
-                    }
+                    GameButton(gameOption: GAME_OPTIONS.paper, action: onSelectionMade)
                     Spacer()
-                    GameButton(text: "✂️") {
-                        onSelectionMade(GAME_OPTIONS.scissors)
-                    }
+                    GameButton(gameOption: GAME_OPTIONS.scissors, action: onSelectionMade)
+                    
                     Spacer()
                     Spacer()
                 }
